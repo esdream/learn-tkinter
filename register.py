@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
+import pickle
 from PIL import ImageTk, Image
 
 window = tk.Tk()
@@ -34,7 +36,26 @@ entry_usr_pwd.place(x=160, y=190)
 
 
 def usr_login():
-    pass
+    usr_name = var_usr_name.get()
+    usr_pwd = var_usr_pwd.get()
+    try:
+        with open('usrs_info.pickle', 'rb') as usr_file:
+            usrs_info = pickle.load(usr_file)
+    except FileNotFoundError:
+        with open('usrs_info.pickle', 'wb') as usr_file:
+            usrs_info = {'admin': 'admin'}
+            pickle.dump(usrs_info, usr_file)
+
+    if(usr_name in usrs_info):
+        if(usr_pwd == usrs_info[usr_name]):
+            tk.messagebox.showinfo(title='Welcome', message='Hello, '+usr_name)
+        else:
+            tk.messagebox.showerror(message='Your password is error!')
+    else:
+        is_sign_up = tk.messagebox.askyesno(message='Welcome, You have not sign up yet. Need sign up?')
+        if(is_sign_up):
+            usr_sign_up()
+
 def usr_sign_up():
     pass
 # login and sign up button
